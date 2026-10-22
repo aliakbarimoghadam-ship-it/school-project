@@ -33,7 +33,23 @@ def seed_database(force: bool = False):
         print("Seeding demo users (Shohada-ye Haste'i School)...")
 
         # ----------------------------------------------------
-        # 1. Teachers (5 Teachers)
+        # 1. School Administrator (Admin)
+        # ----------------------------------------------------
+        admin_pwd_hash = hash_password("admin123")
+        admin = User(
+            username="admin",
+            password_hash=admin_pwd_hash,
+            full_name="مدیریت سامانه (دکتر حسینی)",
+            role="admin",
+            subject=None,
+            class_name=None,
+        )
+        db.add(admin)
+        db.commit()
+        db.refresh(admin)
+
+        # ----------------------------------------------------
+        # 2. Teachers (5 Teachers)
         # ----------------------------------------------------
         teacher_pwd_hash = hash_password("teacher123")
         teachers = [
@@ -92,7 +108,7 @@ def seed_database(force: bool = False):
         t_english = teachers[4]    # انگلیسی
 
         # ----------------------------------------------------
-        # 2. Students (10 Students spread across 2 classes)
+        # 3. Students (10 Students spread across 2 classes)
         # ----------------------------------------------------
         student_pwd_hash = hash_password("student123")
         students = [
@@ -187,7 +203,7 @@ def seed_database(force: bool = False):
             db.refresh(s)
 
         # ----------------------------------------------------
-        # 3. Sample Grades
+        # 4. Sample Grades
         # Every teacher registers grades for their respective subject
         # ----------------------------------------------------
         term_name = "نیمسال اول"
@@ -268,6 +284,7 @@ def seed_database(force: bool = False):
         db.commit()
 
         print("Successfully seeded:")
+        print(" - 1 Administrator")
         print(f" - {len(teachers)} Teachers")
         print(f" - {len(students)} Students (across 2 classes)")
         print(f" - {len(grades_data)} Grades (across 5 subjects)")
