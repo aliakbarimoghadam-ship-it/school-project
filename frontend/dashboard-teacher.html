@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1d4ed8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="شهدای هسته‌ای">
+    <title>دبیرستان شهدای هسته‌ای | پنل دبیران</title>
+    
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- PWA Light Manifest & Touch Icon -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ==========================================
+         Navbar
+         ========================================== -->
+    <header class="navbar">
+        <div class="container navbar-content">
+            <a href="dashboard-teacher.html" class="navbar-brand">
+                <div class="navbar-logo">
+                    <!-- Teacher / Graduation Cap Icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <div class="navbar-title-wrap">
+                    <span class="navbar-title">پنل مدیریت دبیران</span>
+                    <span class="navbar-tagline">دبیرستان شهدای هسته‌ای</span>
+                </div>
+            </a>
+            <div class="navbar-actions">
+                <div id="teacher-profile-badge" class="badge badge-primary" style="padding: 0.45rem 0.85rem; font-size: 0.88rem;">
+                    <!-- Populated dynamically: name & subject -->
+                    در حال بارگذاری...
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="logout()" title="خروج از حساب">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                    <span>خروج</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         Main Teacher Workspace
+         ========================================== -->
+    <main class="container section">
+        
+        <!-- Header Banner -->
+        <div class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">ارزشیابی و ثبت نمرات دانش‌آموزان</h1>
+                <p class="dashboard-subtitle">فهرست کامل دانش‌آموزان پایه‌ها، بررسی کارنامه و ثبت نمرات مستمر و پایانی</p>
+            </div>
+        </div>
+
+        <!-- Summary Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-icon blue">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">تعداد دانش‌آموزان</span>
+                    <span class="stat-card-val" id="stat-total-students">-</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon amber">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">مجموع نمرات ثبت‌شده</span>
+                    <span class="stat-card-val" id="stat-total-grades">-</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon green">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">میانگین کل نمرات</span>
+                    <span class="stat-card-val" id="stat-overall-avg">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <label for="class-filter" style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted);">کلاس:</label>
+                <select id="class-filter" class="form-select" style="max-width: 200px; padding: 0.55rem 0.85rem;">
+                    <option value="">همه کلاس‌ها</option>
+                    <!-- Populated dynamically from /api/classes -->
+                </select>
+            </div>
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="student-search"
+                    class="search-input"
+                    placeholder="جستجوی نام یا نام خانوادگی..."
+                >
+                <span class="search-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Students Roster Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">فهرست دانش‌آموزان</h2>
+                    <p class="form-hint" id="students-count-hint">در حال بارگذاری لیست...</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ردیف</th>
+                            <th>نام و نام خانوادگی</th>
+                            <th>کلاس</th>
+                            <th>تعداد نمرات</th>
+                            <th>معدل کل</th>
+                            <th style="width: 170px; text-align: center;">عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        <tr>
+                            <td colspan="6" class="loading-container">
+                                <div class="spinner"></div>
+                                <span>در حال دریافت اطلاعات دانش‌آموزان...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==========================================
+         Student Grades Details & Add Modal
+         ========================================== -->
+    <div id="student-modal" class="modal-overlay" aria-hidden="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="modal-student-title">کارنامه و ثبت نمره</h3>
+                    <p class="form-hint" id="modal-student-subtitle">اطلاعات تحصیلی دانش‌آموز</p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeStudentModal()" aria-label="بستن">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                
+                <!-- Add New Grade Section -->
+                <div class="card" style="margin-bottom: 2rem; border-color: var(--primary-border); background-color: var(--primary-light);">
+                    <div class="card-header" style="background-color: transparent; border-bottom-color: var(--primary-border); padding: 0.85rem 1.25rem;">
+                        <h4 style="font-size: 1rem; font-weight: 700; color: var(--primary);">
+                            ➕ ثبت نمره جدید
+                        </h4>
+                    </div>
+                    <div class="card-body" style="padding: 1.25rem;">
+                        <form id="add-grade-form" novalidate>
+                            <input type="hidden" id="grade-student-id">
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="grade-subject" class="form-label">درس *</label>
+                                    <select id="grade-subject" class="form-select" required>
+                                        <option value="ریاضی">ریاضی</option>
+                                        <option value="علوم">علوم</option>
+                                        <option value="فارسی">فارسی</option>
+                                        <option value="عربی">عربی</option>
+                                        <option value="انگلیسی">انگلیسی</option>
+                                        <option value="دینی">دینی</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="grade-score" class="form-label">نمره (۰ تا ۲۰) *</label>
+                                    <input
+                                        type="number"
+                                        id="grade-score"
+                                        class="form-input"
+                                        min="0"
+                                        max="20"
+                                        step="0.25"
+                                        placeholder="مثال: ۱۸.۵"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="grade-term" class="form-label">ترم / نیمسال *</label>
+                                    <select id="grade-term" class="form-select" required>
+                                        <option value="نیمسال اول">نیمسال اول</option>
+                                        <option value="نیمسال دوم">نیمسال دوم</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="grade-comment" class="form-label">توضیحات و بازخورد معلم (اختیاری)</label>
+                                <input
+                                    type="text"
+                                    id="grade-comment"
+                                    class="form-input"
+                                    placeholder="مثال: تسلط خوب در حل تمرین‌ها"
+                                    maxlength="250"
+                                >
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button type="submit" id="submit-grade-btn" class="btn btn-primary">
+                                    <span class="btn-spinner"></span>
+                                    <span class="btn-text">ثبت نمره دانش‌آموز</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Existing Grades Table Section -->
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--secondary);">
+                            📚 سوابق نمرات ثبت‌شده
+                        </h4>
+                        <span id="modal-grades-count" class="badge badge-neutral">۰ نمره</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>درس</th>
+                                    <th>نمره</th>
+                                    <th>ترم</th>
+                                    <th>دبیر ثبت‌کننده</th>
+                                    <th>توضیحات</th>
+                                    <th>تاریخ ثبت</th>
+                                    <th style="width: 120px; text-align: center;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-grades-table-body">
+                                <tr>
+                                    <td colspan="7" class="loading-container">
+                                        <div class="spinner"></div>
+                                        <span>در حال بارگذاری نمرات...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">
+                    بستن پنجره
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         Edit Grade Modal
+         ========================================== -->
+    <div id="edit-grade-modal" class="modal-overlay" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 520px;">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title">ویرایش نمره</h3>
+                    <p class="form-hint" id="edit-modal-subtitle">تغییر مشخصات یا بازخورد نمره</p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeEditModal()" aria-label="بستن">
+                    &times;
+                </button>
+            </div>
+
+            <form id="edit-grade-form">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-grade-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-grade-subject" class="form-label">درس</label>
+                        <select id="edit-grade-subject" class="form-select" required>
+                            <option value="ریاضی">ریاضی</option>
+                            <option value="علوم">علوم</option>
+                            <option value="فارسی">فارسی</option>
+                            <option value="عربی">عربی</option>
+                            <option value="انگلیسی">انگلیسی</option>
+                            <option value="دینی">دینی</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-grade-score" class="form-label">نمره (۰ تا ۲۰) *</label>
+                        <input
+                            type="number"
+                            id="edit-grade-score"
+                            class="form-input"
+                            min="0"
+                            max="20"
+                            step="0.25"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-grade-term" class="form-label">ترم / نیمسال</label>
+                        <select id="edit-grade-term" class="form-select" required>
+                            <option value="نیمسال اول">نیمسال اول</option>
+                            <option value="نیمسال دوم">نیمسال دوم</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-grade-comment" class="form-label">توضیحات معلم</label>
+                        <input
+                            type="text"
+                            id="edit-grade-comment"
+                            class="form-input"
+                            maxlength="250"
+                        >
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+                        انصراف
+                    </button>
+                    <button type="submit" id="save-edit-grade-btn" class="btn btn-primary">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-text">ذخیره تغییرات</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Root -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/app.js?v=3" defer></script>
+    <script src="js/teacher.js?v=3" defer></script>
+</body>
+</html>

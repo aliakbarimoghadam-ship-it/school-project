@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1d4ed8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="شهدای هسته‌ای">
+    <title>دبیرستان شهدای هسته‌ای | پنل دانش‌آموزان</title>
+    
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- PWA Light Manifest & Touch Icon -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ==========================================
+         Navbar
+         ========================================== -->
+    <header class="navbar">
+        <div class="container navbar-content">
+            <a href="dashboard-student.html" class="navbar-brand">
+                <div class="navbar-logo">
+                    <!-- Student Cap Icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <div class="navbar-title-wrap">
+                    <span class="navbar-title">پنل دانش‌آموزی</span>
+                    <span class="navbar-tagline">دبیرستان شهدای هسته‌ای</span>
+                </div>
+            </a>
+            <div class="navbar-actions">
+                <div id="student-profile-badge" class="badge badge-primary" style="padding: 0.45rem 0.85rem; font-size: 0.88rem;">
+                    <!-- Populated dynamically -->
+                    در حال بارگذاری...
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="logout()" title="خروج از حساب">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                    <span>خروج</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         Main Student Workspace
+         ========================================== -->
+    <main class="container section">
+
+        <!-- Welcome Banner Card -->
+        <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-color: var(--primary-border);">
+            <div class="card-body" style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="badge badge-success">دانش‌آموز فعال</span>
+                    <span class="badge badge-neutral" id="welcome-student-class">کلاس: در حال دریافت...</span>
+                </div>
+                <h1 class="dashboard-title" style="margin-bottom: 0.25rem;">
+                    دانش‌آموز گرامی، <span id="welcome-student-name" style="color: var(--primary);">در حال بارگذاری...</span> خوش آمدید
+                </h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    کارنامه تحصیلی برخط، وضعیت نمرات مستمر و نمودار عملکرد دروس شما به شرح زیر می‌باشد:
+                </p>
+            </div>
+        </div>
+
+        <!-- Summary KPI Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-icon green">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">معدل کل نمرات</span>
+                    <span class="stat-card-val" id="stat-student-avg">-</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon blue">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">تعداد نمرات ثبت‌شده</span>
+                    <span class="stat-card-val" id="stat-student-grades-count">-</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon amber">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">بهترین درس</span>
+                    <span class="stat-card-val" id="stat-student-best" style="font-size: 1.25rem;">-</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon purple">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">نیازمند تمرین بیشتر</span>
+                    <span class="stat-card-val" id="stat-student-lowest" style="font-size: 1.25rem;">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Visualizer (Pure CSS Progress Bars) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">نمودار پیشرفت دروس</h2>
+                    <p class="form-hint">میانگین عملکرد شما در هر درس بر اساس مقیاس استاندارد ۰ تا ۲۰</p>
+                </div>
+                <span class="badge badge-primary">تحلیل عملکرد</span>
+            </div>
+            <div class="card-body">
+                <div id="subject-visualizer-container" class="subject-visualizer-grid">
+                    <div class="loading-container" style="grid-column: 1 / -1;">
+                        <div class="spinner"></div>
+                        <span>در حال رسم نمودار دروس...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Grades Table Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">ریز نمرات و کارنامه تحصیلی</h2>
+                    <p class="form-hint" id="grades-count-hint">فهرست کامل نمرات به همراه توضیحات دبیران</p>
+                </div>
+                <span class="badge badge-neutral" style="font-size: 0.82rem;">حالت فقط خواندنی (Read-Only)</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ردیف</th>
+                            <th>درس</th>
+                            <th>نمره</th>
+                            <th>ترم / نیمسال</th>
+                            <th>دبیر ارزیاب</th>
+                            <th>توضیحات و بازخورد معلم</th>
+                            <th>تاریخ ثبت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-grades-table-body">
+                        <tr>
+                            <td colspan="7" class="loading-container">
+                                <div class="spinner"></div>
+                                <span>در حال دریافت کارنامه...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/app.js?v=3" defer></script>
+    <script src="js/student.js?v=3" defer></script>
+</body>
+</html>
